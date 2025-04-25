@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Validation;
+using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -11,13 +12,20 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 /// Represents a user in the system with authentication and profile information.
 /// This entity follows domain-driven design principles and includes business rules validation.
 /// </summary>
-public class User : BaseEntity, IUser
+public class User : BaseEntityGuidId, IUser
 {
+
     /// <summary>
     /// Gets the user's full name.
     /// Must not be null or empty and should contain both first and last names.
     /// </summary>
     public string Username { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets the user's name.
+    /// Must be a firstname and lastname not empties.
+    /// </summary>
+    public NameVo Name { get; set; } = default!;
 
     /// <summary>
     /// Gets the user's email address.
@@ -59,6 +67,14 @@ public class User : BaseEntity, IUser
     /// Gets the date and time of the last update to the user's information.
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
+
+
+    /// <summary>
+    /// Gets the Address of user
+    /// </summary>
+    public Address? Address { get; set; }
+
+    public List<Sale>? Sales { get; set; }
 
     /// <summary>
     /// Gets the unique identifier of the user.

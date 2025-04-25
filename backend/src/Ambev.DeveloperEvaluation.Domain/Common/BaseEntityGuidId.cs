@@ -2,7 +2,7 @@
 
 namespace Ambev.DeveloperEvaluation.Domain.Common;
 
-public class BaseEntity : IComparable<BaseEntity>
+public class BaseEntityGuidId : IComparable<BaseEntityGuidId>
 {
     public Guid Id { get; set; }
 
@@ -11,7 +11,7 @@ public class BaseEntity : IComparable<BaseEntity>
         return Validator.ValidateAsync(this);
     }
 
-    public int CompareTo(BaseEntity? other)
+    public int CompareTo(BaseEntityGuidId? other)
     {
         if (other == null)
         {
