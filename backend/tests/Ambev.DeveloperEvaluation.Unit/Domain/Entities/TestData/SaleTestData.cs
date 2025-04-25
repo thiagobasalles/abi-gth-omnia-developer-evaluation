@@ -13,13 +13,37 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData
     /// </summary>
     public static class SaleTestData
     {
-        private static readonly Faker<Sale> SaleFaker = new Faker<Sale>()
+        private static readonly Faker<Sale> SaleValidToApproveFaker = new Faker<Sale>()
             .RuleFor(s => s.Id, f => f.Random.Long(1, 100))
             .RuleFor(s => s.UserId, f => f.Random.Guid())
             .RuleFor(s => s.BranchId, f => f.Random.Long(1, 10))
-            .RuleFor(s => s.DatePreApprove, (Faker f) => f.Random.Bool() ? f.Date.Past() : (DateTime?)null)
-            .RuleFor(s => s.DateApproved, (Faker f) => f.Random.Bool() ? f.Date.Past() : (DateTime?)null)
-            .RuleFor(s => s.DateCancelled, (Faker f) => f.Random.Bool() ? f.Date.Past() : (DateTime?)null)
+            .RuleFor(s => s.DatePreApprove, (DateTime?)null)
+            .RuleFor(s => s.DateApproved, (DateTime?)null)
+            .RuleFor(s => s.DateCancelled, (DateTime?) null)
+            .RuleFor(s => s.TotalAmount, f => f.Random.Decimal(10, 1000))
+            .RuleFor(s => s.SaleItems, (Faker f) => GenerateValidSaleItems(f.Random.Number(1, 3)))
+            .RuleFor(s => s.User, (Faker f) => UserTestData.GenerateValidUser())
+            .RuleFor(s => s.Branch, (Faker f) => GenerateValidBranch());
+
+        private static readonly Faker<Sale> SaleValidCancelledFaker = new Faker<Sale>()
+            .RuleFor(s => s.Id, f => f.Random.Long(1, 100))
+            .RuleFor(s => s.UserId, f => f.Random.Guid())
+            .RuleFor(s => s.BranchId, f => f.Random.Long(1, 10))
+            .RuleFor(s => s.DatePreApprove, (DateTime?)null)
+            .RuleFor(s => s.DateApproved, (DateTime?)null)
+            .RuleFor(s => s.DateCancelled, DateTime.UtcNow)
+            .RuleFor(s => s.TotalAmount, f => f.Random.Decimal(10, 1000))
+            .RuleFor(s => s.SaleItems, (Faker f) => GenerateValidSaleItems(f.Random.Number(1, 3)))
+            .RuleFor(s => s.User, (Faker f) => UserTestData.GenerateValidUser())
+            .RuleFor(s => s.Branch, (Faker f) => GenerateValidBranch());
+
+        private static readonly Faker<Sale> SaleValidoNotPreApprovedFaker = new Faker<Sale>()
+            .RuleFor(s => s.Id, f => f.Random.Long(1, 100))
+            .RuleFor(s => s.UserId, f => f.Random.Guid())
+            .RuleFor(s => s.BranchId, f => f.Random.Long(1, 10))
+            .RuleFor(s => s.DatePreApprove, (DateTime?)null)
+            .RuleFor(s => s.DateApproved, DateTime.UtcNow)
+            .RuleFor(s => s.DateCancelled, (DateTime?)null)
             .RuleFor(s => s.TotalAmount, f => f.Random.Decimal(10, 1000))
             .RuleFor(s => s.SaleItems, (Faker f) => GenerateValidSaleItems(f.Random.Number(1, 3)))
             .RuleFor(s => s.User, (Faker f) => UserTestData.GenerateValidUser())
@@ -33,19 +57,34 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData
             .RuleFor(si => si.UnitPrice, f => f.Random.Decimal(1, 100))
             .RuleFor(si => si.Discount, f => f.Random.Decimal(0, 10));
 
+
         /// <summary>
-        /// Generates a valid Sale entity with randomized data.
+        /// Generates a approved Sale.
         /// </summary>
-        /// <returns>A valid Sale entity.</returns>
+        public static Sale GenerateValidNotPreApprovedSale()
+        {
+            return SaleValidoNotPreApprovedFaker.Generate();
+        }
+
+        /// <summary>
+        /// Generates a Cancelled Sale.
+        /// </summary>
+        public static Sale GenerateValidCancelledSale()
+        {
+            return SaleValidCancelledFaker.Generate();
+        }
+
+        /// <summary>
+        /// Generates a valid Sale entity to approved.
+        /// </summary>
         public static Sale GenerateValidSale()
         {
-            return SaleFaker.Generate();
+            return SaleValidToApproveFaker.Generate();
         }
 
         /// <summary>
         /// Generates a valid SaleItem entity with randomized data.
         /// </summary>
-        /// <returns>A valid SaleItem entity.</returns>
         public static SaleItem GenerateValidSaleItem()
         {
             return SaleItemFaker.Generate();
@@ -79,12 +118,5 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData
             return new Faker().Random.Long(1, 10);
         }
 
-        /// <summary>
-        /// Generates a different valid BranchId for testing purposes.
-        /// </summary>
-        public static long GenerateDifferentBranchId()
-        {
-            return new Faker().Random.Long(11, 20);
-        }
     }
 }

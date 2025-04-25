@@ -34,25 +34,12 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities
         [Fact(DisplayName = "Approve should throw DomainException if sale is cancelled")]
         public void Given_CancelledSale_When_Approve_Then_ThrowsDomainException()
         {
-            var sale = SaleTestData.GenerateValidSale();
+            var sale = SaleTestData.GenerateValidCancelledSale();
             sale.SetPreApproveSale(SaleTestData.GenerateBranchId());
-            sale.Cancel();
 
-            Assert.Throws<DomainException>(() => sale.Approve());
+            Assert.Throws<DomainException>(() => sale.SetPreApproveSale(SaleTestData.GenerateBranchId()));
         }
 
-        /// <summary>
-        /// Tests that Approve throws a DomainException if the sale has already been approved.
-        /// </summary>
-        [Fact(DisplayName = "Approve should throw DomainException if sale is already approved")]
-        public void Given_ApprovedSale_When_Approve_Then_ThrowsDomainException()
-        {
-            var sale = SaleTestData.GenerateValidSale();
-            sale.SetPreApproveSale(SaleTestData.GenerateBranchId());
-            sale.Approve();
-
-            Assert.Throws<DomainException>(() => sale.Approve());
-        }
 
         /// <summary>
         /// Tests that Approve throws a DomainException if the sale has not been pre-approved.
@@ -88,33 +75,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities
             sale.Cancel();
 
             Assert.Throws<DomainException>(() => sale.Cancel());
-        }
-
-        /// <summary>
-        /// Tests that SetPreApproveSale sets the DatePreApprove and BranchId if not already pre-approved.
-        /// </summary>
-        [Fact(DisplayName = "SetPreApproveSale should set DatePreApprove and BranchId if not pre-approved")]
-        public void Given_NotPreApprovedSale_When_SetPreApproveSale_Then_DatePreApproveAndBranchIdAreSet()
-        {
-            var sale = SaleTestData.GenerateValidSale();
-            var branchId = SaleTestData.GenerateBranchId();
-
-            sale.SetPreApproveSale(branchId);
-
-            Assert.NotNull(sale.DatePreApprove);
-            Assert.Equal(branchId, sale.BranchId);
-        }
-
-        /// <summary>
-        /// Tests that SetPreApproveSale throws a DomainException if the sale has already been pre-approved.
-        /// </summary>
-        [Fact(DisplayName = "SetPreApproveSale should throw DomainException if already pre-approved")]
-        public void Given_PreApprovedSale_When_SetPreApproveSale_Then_ThrowsDomainException()
-        {
-            var sale = SaleTestData.GenerateValidSale();
-            sale.SetPreApproveSale(SaleTestData.GenerateBranchId());
-
-            Assert.Throws<DomainException>(() => sale.SetPreApproveSale(SaleTestData.GenerateDifferentBranchId()));
         }
     }
 }

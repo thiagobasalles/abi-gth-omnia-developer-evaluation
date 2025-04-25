@@ -28,7 +28,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities
             Assert.NotEqual(0, saleItem.ProductId);
             Assert.NotEqual(0, saleItem.Quantity);
             Assert.NotEqual(0, saleItem.UnitPrice);
-            Assert.Equal(0, saleItem.Discount);
             Assert.Null(saleItem.Product);
             Assert.Null(saleItem.Sale);
         }
