@@ -67,10 +67,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens
 		..\.doc\general-api.md = ..\.doc\general-api.md
 		..\.doc\overview.md = ..\.doc\overview.md
 		..\.doc\products-api.md = ..\.doc\products-api.md
-		..\.doc\project-structure.md = ..\.doc\project-structure.md
 		..\PROJECT-README.md = ..\PROJECT-README.md
+		..\.doc\project-structure.md = ..\.doc\project-structure.md
+		..\README.md = ..\README.md
 		..\.doc\tech-stack.md = ..\.doc\tech-stack.md
-		README.md = README.md
 		..\.doc\users-api.md = ..\.doc\users-api.md
 	EndProjectSection
 EndProject
