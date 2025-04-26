@@ -1,86 +1,54 @@
-# Developer Evaluation Project
+﻿# 🧾 Documentação - Configuração e Uso da Aplicação
 
-`READ CAREFULLY`
+## 🐳 Execução com Docker Compose
 
-## Instructions
-**The test below will have up to 7 calendar days to be delivered from the date of receipt of this manual.**
+Esta aplicação utiliza **Docker Compose** e deve ser iniciada diretamente pelo **Visual Studio 2022**.
 
-- The code must be versioned in a public Github repository and a link must be sent for evaluation once completed
-- Upload this template to your repository and start working from it
-- Read the instructions carefully and make sure all requirements are being addressed
-- The repository must provide instructions on how to configure, execute and test the project
-- Documentation and overall organization will also be taken into consideration
+### Passos para iniciar o projeto:
 
-## Use Case
-**You are a developer on the DeveloperStore team. Now we need to implement the API prototypes.**
+1. Abra a solução no **Visual Studio 2022**.
+2. Defina o projeto `docker-compose` como **Startup Project**.
+3. Inicie a aplicação (F5 ou Ctrl + F5) e aguarde os containers estarem prontos.
 
-As we work with `DDD`, to reference entities from other domains, we use the `External Identities` pattern with denormalization of entity descriptions.
+---
 
-Therefore, you will write an API (complete CRUD) that handles sales records. The API needs to be able to inform:
+## 🧬 Gerenciando Migrations (EF Core)
 
-* Sale number
-* Date when the sale was made
-* Customer
-* Total sale amount
-* Branch where the sale was made
-* Products
-* Quantities
-* Unit prices
-* Discounts
-* Total amount for each item
-* Cancelled/Not Cancelled
+Para adicionar e aplicar migrations ao banco de dados usando o **Entity Framework Core**, siga os passos abaixo.
 
-It's not mandatory, but it would be a differential to build code for publishing events of:
-* SaleCreated
-* SaleModified
-* SaleCancelled
-* ItemCancelled
+### ✅ Criar uma nova migration
 
-If you write the code, **it's not required** to actually publish to any Message Broker. You can log a message in the application log or however you find most convenient.
+Abra o **Console do Gerenciador de Pacotes** e execute:
 
-### Business Rules
+```powershell
+Add-Migration Init -StartupProject Ambev.DeveloperEvaluation.WebApi -Project Ambev.DeveloperEvaluation.ORM -Context DefaultContext
+Substitua Init pelo nome descritivo da migration.
 
-* Purchases above 4 identical items have a 10% discount
-* Purchases between 10 and 20 identical items have a 20% discount
-* It's not possible to sell above 20 identical items
-* Purchases below 4 items cannot have a discount
+🚀 Aplicar a migration no banco de dados
+Com o Docker Compose rodando, execute:
 
-These business rules define quantity-based discounting tiers and limitations:
+powershell
+Copiar
+Editar
+Update-Database -StartupProject Ambev.DeveloperEvaluation.WebApi -Project Ambev.DeveloperEvaluation.ORM -Context DefaultContext
+Isso aplicará a migration atual no banco de dados containerizado.
 
-1. Discount Tiers:
-   - 4+ items: 10% discount
-   - 10-20 items: 20% discount
+📫 Testando a API com Postman
+O arquivo Ambev.postman_collection.json pode ser importado no Postman para facilitar o teste dos endpoints da API.
 
-2. Restrictions:
-   - Maximum limit: 20 items per product
-   - No discounts allowed for quantities below 4 items
+Como usar:
+Abra o Postman.
 
-## Overview
-This section provides a high-level overview of the project and the various skills and competencies it aims to assess for developer candidates. 
+Clique em Import > selecione o arquivo Ambev.postman_collection.json.
 
-See [Overview](/.doc/overview.md)
+Use os endpoints disponíveis para interagir com a API.
 
-## Tech Stack
-This section lists the key technologies used in the project, including the backend, testing, frontend, and database components. 
+🛠️ Requisitos
+Visual Studio 2022
 
-See [Tech Stack](/.doc/tech-stack.md)
+Docker Desktop
 
-## Frameworks
-This section outlines the frameworks and libraries that are leveraged in the project to enhance development productivity and maintainability. 
+.NET SDK 8.0+
 
-See [Frameworks](/.doc/frameworks.md)
+Postman (opcional, mas recomendado)
 
-<!-- 
-## API Structure
-This section includes links to the detailed documentation for the different API resources:
-- [API General](./docs/general-api.md)
-- [Products API](/.doc/products-api.md)
-- [Carts API](/.doc/carts-api.md)
-- [Users API](/.doc/users-api.md)
-- [Auth API](/.doc/auth-api.md)
--->
-
-## Project Structure
-This section describes the overall structure and organization of the project files and directories. 
-
-See [Project Structure](/.doc/project-structure.md)
