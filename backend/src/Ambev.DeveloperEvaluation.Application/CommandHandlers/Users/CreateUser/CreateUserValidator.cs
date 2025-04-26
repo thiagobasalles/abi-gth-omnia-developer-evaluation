@@ -24,10 +24,35 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     public CreateUserCommandValidator()
     {
         RuleFor(user => user.Email).SetValidator(new EmailValidator());
-        RuleFor(user => user.Username).NotEmpty().Length(3, 50);
+        RuleFor(user => user.Name.Firstname)
+            .NotEmpty().Length(3, 50)
+            .When(user => user.Name != null);
+
+        RuleFor(user => user.Name.Lastname)
+            .NotEmpty().Length(3, 50)
+            .When(user => user.Name != null);
         RuleFor(user => user.Password).SetValidator(new PasswordValidator());
         RuleFor(user => user.Phone).Matches(@"^\+?[1-9]\d{1,14}$");
         RuleFor(user => user.Status).NotEqual(UserStatus.Unknown);
         RuleFor(user => user.Role).NotEqual(UserRole.None);
+
+        RuleFor(user => user.Address)
+            .NotNull().WithMessage("Address cannot be null");
+
+        RuleFor(user => user.Address.City)
+            .NotEmpty().WithMessage("City is required")
+            .When(user => user.Address != null);
+
+        RuleFor(user => user.Address.Street)
+            .NotEmpty().WithMessage("Street is required")
+            .When(user => user.Address != null);
+
+        RuleFor(user => user.Address.Number)
+            .GreaterThan(0).WithMessage("Number must be greater than zero")
+            .When(user => user.Address != null);
+
+        RuleFor(user => user.Address.Zipcode)
+            .NotEmpty().WithMessage("Zipcode is required")
+            .When(user => user.Address != null);
     }
 }

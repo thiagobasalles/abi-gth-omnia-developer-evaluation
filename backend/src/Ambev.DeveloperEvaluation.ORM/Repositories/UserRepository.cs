@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories;
 
@@ -41,7 +42,7 @@ public class UserRepository : IUserRepository
     /// <returns>The user if found, null otherwise</returns>
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Users.FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
+        return await _context.Users.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
     /// <summary>
@@ -71,5 +72,41 @@ public class UserRepository : IUserRepository
         _context.Users.Remove(user);
         await _context.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken)
+    {
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
+    }
+
+    public async Task<User?> GetByIdWithAddressAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users
+            .Include(u => u.Address)
+            .ThenInclude(a => a!.Geolocation)
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public IQueryable<User> GetAllUsersQuery(string order)
+    {
+        var queryable = _context.Users
+            .Include(p => p.Address)
+            .ThenInclude(a => a!.Geolocation)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(order))
+        {
+            queryable = queryable.OrderBy(order);
+        }
+
+        return queryable;
+    }
+
+    public async Task<bool> UpdateAsync(User user, CancellationToken cancellationToken)
+    {
+        _context.Users.Update(user);
+        return (await _context.SaveChangesAsync(cancellationToken)) != 0 ? true : false;
+
     }
 }

@@ -24,6 +24,14 @@ public interface IUserRepository
     Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves a user and address by their unique identifier
+    /// </summary>
+    /// <param name="id">The unique identifier of the user</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The user if found, null otherwise</returns>
+    Task<User?> GetByIdWithAddressAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieves a user by their email address
     /// </summary>
     /// <param name="email">The email address to search for</param>
@@ -38,4 +46,7 @@ public interface IUserRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>True if the user was deleted, false if not found</returns>
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken);
+    IQueryable<User?> GetAllUsersQuery(string order);
+    Task<bool> UpdateAsync(User user, CancellationToken cancellationToken);
 }

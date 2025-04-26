@@ -16,6 +16,7 @@ COPY ["src/Ambev.DeveloperEvaluation.Common/Ambev.DeveloperEvaluation.Common.csp
 COPY ["src/Ambev.DeveloperEvaluation.Application/Ambev.DeveloperEvaluation.Application.csproj", "src/Ambev.DeveloperEvaluation.Application/"]
 COPY ["src/Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj", "src/Ambev.DeveloperEvaluation.ORM/"]
 COPY ["src/Ambev.DeveloperEvaluation.Cache/Ambev.DeveloperEvaluation.Cache.csproj", "src/Ambev.DeveloperEvaluation.Cache/"]
+COPY ["src/Ambev.DeveloperEvaluation.ApiGeoService/Ambev.DeveloperEvaluation.ApiGeoService.csproj", "src/Ambev.DeveloperEvaluation.ApiGeoService/"]
 RUN dotnet restore "./src/Ambev.DeveloperEvaluation.WebApi/Ambev.DeveloperEvaluation.WebApi.csproj"
 COPY . .
 WORKDIR "/src/src/Ambev.DeveloperEvaluation.WebApi"

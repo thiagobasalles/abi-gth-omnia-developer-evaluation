@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Application.CommandHandlers.Users.CreateUser;
+using Ambev.DeveloperEvaluation.Domain.ValueObjects;
+using Ambev.DeveloperEvaluation.Application.CommandHandlers.Users.UpdateUser;
 
 namespace Ambev.DeveloperEvaluation.Application.Users.CreateUser;
 
@@ -14,6 +17,8 @@ public class CreateUserProfile : Profile
     public CreateUserProfile()
     {
         CreateMap<CreateUserCommand, User>();
-        CreateMap<User, CreateUserResult>();
+        CreateMap<CreateUserNameDto, NameVo>();
+        CreateMap<CreateUserAddressDto, Address>();
+        CreateMap<CreateUserGeolocationDto, GeoLocation>();
     }
 }

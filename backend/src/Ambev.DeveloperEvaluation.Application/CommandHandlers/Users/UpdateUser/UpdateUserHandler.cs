@@ -5,13 +5,14 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Domain.Services;
+using Ambev.DeveloperEvaluation.Application.Users.CreateUser;
 
-namespace Ambev.DeveloperEvaluation.Application.Users.CreateUser;
+namespace Ambev.DeveloperEvaluation.Application.CommandHandlers.Users.UpdateUser;
 
 /// <summary>
 /// Handler for processing CreateUserCommand requests
 /// </summary>
-public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
+public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Guid>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
@@ -24,7 +25,7 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     /// <param name="userRepository">The user repository</param>
     /// <param name="mapper">The AutoMapper instance</param>
     /// <param name="validator">The validator for CreateUserCommand</param>
-    public CreateUserHandler(IUserRepository userRepository, 
+    public UpdateUserHandler(IUserRepository userRepository, 
         IMapper mapper, 
         IPasswordHasher passwordHasher,
         IGeoApiService geoApiService
@@ -42,31 +43,26 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     /// <param name="command">The CreateUser command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The created user details</returns>
-    public async Task<Guid> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        var validator = new CreateUserCommandValidator();
+        var validator = new UpdateUserCommandValidator();
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var existingEmail = await _userRepository.GetByEmailAsync(command.Email, cancellationToken);
-        if (existingEmail != null)
-            throw new InvalidOperationException($"User with email {command.Email} already exists");
-
-        var existinUsername = await _userRepository.GetByUsernameAsync(command.Email, cancellationToken);
-        if (existinUsername != null)
-            throw new InvalidOperationException($"User with username {command.Username} already exists");
+        var userDb = await _userRepository.GetByIdWithAddressAsync(command.Id, cancellationToken);
+        if (userDb == null)
+            throw new InvalidOperationException($"User with ID {command.Id} not exists");
 
         var resultGeolocation = await _geoApiService.GetByAddress(command.Address.ToString());
 
-        var user = _mapper.Map<User>(command);
+        var user = _mapper.Map(command, userDb);
         user.Password = _passwordHasher.HashPassword(command.Password);
-
         (user.Address ?? throw new InvalidOperationException("Address cannot be null."))
             .Geolocation = GeoLocation.AddLatLong(resultGeolocation.Lat, resultGeolocation.Lon);
 
-        var createdUser = await _userRepository.CreateAsync(user, cancellationToken);
-        return createdUser.Id;
+        await _userRepository.UpdateAsync(user, cancellationToken);
+        return user.Id;
     }
 }

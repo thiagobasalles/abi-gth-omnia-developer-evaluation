@@ -8,6 +8,10 @@ using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Nominatim.API.Address;
+using Nominatim.API.Geocoders;
+using Nominatim.API.Interfaces;
+using Nominatim.API.Web;
 using Serilog;
 using StackExchange.Redis;
 
@@ -56,6 +60,13 @@ public class Program
                     typeof(Program).Assembly
                 );
             });
+
+            builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<IForwardGeocoder, ForwardGeocoder>();
+            builder.Services.AddSingleton<IAddressSearcher, AddressSearcher>();
+            builder.Services.AddSingleton<IReverseGeocoder, ReverseGeocoder>();
+            builder.Services.AddSingleton<IAddressSearcher, AddressSearcher>();
+            builder.Services.AddSingleton<INominatimWebInterface, NominatimWebInterface>();
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
