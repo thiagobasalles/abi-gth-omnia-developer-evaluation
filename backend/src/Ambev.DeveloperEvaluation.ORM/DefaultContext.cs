@@ -26,11 +26,11 @@ public class DefaultContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Branch>().HasData(
-            new Branch { Name = "Matriz" },
-            new Branch { Name = "Filial Norte" },
-            new Branch { Name = "Filial Sul" },
-            new Branch { Name = "Filial Leste" },
-            new Branch { Name = "Filial Oeste" }
+            new Branch { Id = 1, Name = "Matriz" },
+            new Branch { Id = 2, Name = "Filial Norte" },
+            new Branch { Id = 3, Name = "Filial Sul" },
+            new Branch { Id = 4, Name = "Filial Leste" },
+            new Branch { Id = 5, Name = "Filial Oeste" }
         );
     }
 }
