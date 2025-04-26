@@ -9,6 +9,7 @@ using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using StackExchange.Redis;
 
 namespace Ambev.DeveloperEvaluation.WebApi;
 
@@ -35,6 +36,12 @@ public class Program
                     b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
                 )
             );
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var configuration = builder.Configuration.GetConnectionString("CacheConnection") ?? throw new ArgumentNullException("CacheConnection connection not found.");
+                return ConnectionMultiplexer.Connect(configuration);
+            });
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
 
