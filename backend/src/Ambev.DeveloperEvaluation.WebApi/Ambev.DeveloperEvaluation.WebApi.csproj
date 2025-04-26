@@ -31,4 +31,8 @@
     <ProjectReference Include="..\Ambev.DeveloperEvaluation.IoC\Ambev.DeveloperEvaluation.IoC.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Products\GetAllCategories\" />
+  </ItemGroup>
+
 </Project>
