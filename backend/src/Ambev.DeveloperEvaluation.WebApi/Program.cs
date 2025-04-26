@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Ambev.DeveloperEvaluation.Application;
 using Ambev.DeveloperEvaluation.Common.HealthChecks;
 using Ambev.DeveloperEvaluation.Common.Logging;
@@ -8,6 +9,7 @@ using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Nominatim.API.Address;
 using Nominatim.API.Geocoders;
 using Nominatim.API.Interfaces;
@@ -28,7 +30,10 @@ public class Program
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
             builder.AddDefaultLogging();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             builder.Services.AddEndpointsApiExplorer();
 
             builder.AddBasicHealthChecks();
@@ -46,6 +51,14 @@ public class Program
                 var configuration = builder.Configuration.GetConnectionString("CacheConnection") ?? throw new ArgumentNullException("CacheConnection connection not found.");
                 return ConnectionMultiplexer.Connect(configuration);
             });
+            /*
+            builder.Services.AddDbContext<CartContext>(options =>
+            {
+                var mongoUrl = new MongoUrl(builder.Configuration.GetConnectionString("CartConnection"));
+                var client = new MongoClient(mongoUrl);
+                options.UseMongoDB(client, mongoUrl.DatabaseName);
+            });*/
+
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
 
